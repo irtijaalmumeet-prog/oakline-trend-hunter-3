@@ -1,0 +1,55 @@
+========================================================================
+  PUT OAKLINE TREND HUNTER ONLINE (always on, clients log in 24/7)
+  Free. ~15 minutes. You only do this ONCE.
+========================================================================
+
+You need two free accounts: Vercel (runs the app) and Neon (the database
+that remembers your users). No credit card.
+
+------------------------------------------------------------------------
+STEP 1 - Create the free database (Neon)
+------------------------------------------------------------------------
+1. Go to  neon.tech  ->  Sign up  (use Google/GitHub, it's free).
+2. Click  "Create project"  -> accept defaults -> Create.
+3. On the project page find  "Connection string".
+4. Copy the whole string. It looks like:
+       postgres://user:password@ep-xxxx.aws.neon.tech/dbname?sslmode=require
+   Keep this on your clipboard / paste it in Notepad. You'll need it in Step 3.
+
+------------------------------------------------------------------------
+STEP 2 - Put the code on GitHub (so Vercel can read it)
+------------------------------------------------------------------------
+Easiest: install "GitHub Desktop" (desktop.github.com), sign in, then
+  File -> Add local repository -> choose your oakline-trend-hunter folder
+  -> "Publish repository" (you can keep it Private).
+That uploads everything correctly (no manual file dragging).
+
+------------------------------------------------------------------------
+STEP 3 - Deploy on Vercel
+------------------------------------------------------------------------
+1. Go to  vercel.com  ->  Sign up  ->  Continue with GitHub.
+2. Click  "Add New..." -> "Project"  -> Import your repo.
+3. BEFORE clicking Deploy, open  "Environment Variables"  and add each of
+   these (Name on the left, Value on the right):
+
+       CLAUDE_API_KEY     = your Anthropic key
+       CLAUDE_MODEL       = claude-sonnet-4-6
+       OWNER_EMAIL        = your login email
+       OWNER_PASSWORD     = your login password
+       JWT_SECRET         = any long random text
+       DATABASE_URL       = the Neon string you copied in Step 1
+
+4. Click  "Deploy".  Wait ~2 minutes.
+5. You get a live link like  https://oakline-trend-hunter.vercel.app
+   That link works even when your PC is OFF. Send it to your clients.
+
+------------------------------------------------------------------------
+HOW IT WORKS NOW
+------------------------------------------------------------------------
+- Log in as the owner (OWNER_EMAIL / OWNER_PASSWORD).
+- Add clients from the "Manage clients" panel. Each gets a temp password.
+- Because users are stored in the Neon database, they STAY added and can
+  log in any time - your computer does not need to be running.
+
+To update the live site later: change files, push with GitHub Desktop,
+and Vercel redeploys automatically.

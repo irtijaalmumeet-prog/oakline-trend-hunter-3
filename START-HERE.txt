@@ -1,0 +1,53 @@
+==================================================================
+  OAKLINE TREND HUNTER — ONE APP, ONE COMMAND (BEGINNER GUIDE)
+==================================================================
+This is ONE program (no separate backend/frontend, no port juggling).
+
+WHAT IT DOES
+- You pick a country + niche (or let AI choose).
+- It pulls LIVE Google Trends (real, changes over time, differs per
+  niche & country), then Claude turns those trends into scored
+  product ideas.
+- Each product has one-click buttons that OPEN Facebook Ads Library,
+  TikTok, AliExpress, CJ, Amazon in YOUR browser, pre-searched, so
+  you review them by hand (the legal way).
+- Owner login + you can add client logins.
+
+------------------------------------------------------------------
+SETUP (do once)
+------------------------------------------------------------------
+1. Save "oakline-trend-hunter.zip", right-click -> Extract All.
+2. Open the extracted folder (you'll see app, lib, package.json...).
+3. Click the address bar, type:  powershell   press Enter.
+4. Type:  npm install        (Enter, wait ~1-2 min)
+5. Type:  copy .env.example .env.local       (Enter)
+6. Type:  notepad .env.local                 (Enter)
+   Fill in these lines, then Ctrl+S and close:
+       CLAUDE_API_KEY=sk-ant-...your key...
+       OWNER_EMAIL=you@youremail.com
+       OWNER_PASSWORD=pick-a-password
+       JWT_SECRET=any-long-random-text
+   (YOUTUBE_API_KEY is optional — leave blank.)
+
+------------------------------------------------------------------
+RUN IT (every time)
+------------------------------------------------------------------
+7. In the same PowerShell (in the project folder), type:
+       npm run dev
+8. Open your browser to:   http://localhost:3000
+9. Sign in with your OWNER_EMAIL and OWNER_PASSWORD.
+10. Pick a country, type a niche, click "Start hunting".
+    Wait ~10-20 seconds (it calls Google Trends + Claude).
+
+------------------------------------------------------------------
+NOTES
+------------------------------------------------------------------
+- Real data: Google Trends (no key) + Claude (your key). Results
+  differ by niche and country and change over time.
+- Facebook / TikTok ad libraries: opened in your browser via the
+  buttons on each product. The tool does NOT scrape them.
+- Add clients: click "Manage clients" (top right) when logged in
+  as owner; share the temp password it shows.
+- To stop: click the PowerShell window, press Ctrl+C.
+- Trouble? Copy the red error + what step you were on, send it over.
+==================================================================

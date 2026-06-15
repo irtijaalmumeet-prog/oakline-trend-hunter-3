@@ -1,0 +1,60 @@
+import { NextResponse } from 'next/server';
+import { userFromReq } from '../../../lib/auth.js';
+import { dailyTrends, relatedQueries } from '../../../lib/googleTrends.js';
+import { productIdeas, suggestNiche } from '../../../lib/claude.js';
+import { scoreIdeas } from '../../../lib/score.js';
+import { platformLinks } from '../../../lib/platformLinks.js';
+import { searchVideos, youtubeEnabled } from '../../../lib/youtube.js';
+
+export async function POST(req) {
+  const u = userFromReq(req);
+  if (!u) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+
+  let { niche, country, letAiDecide } = await req.json().catch(() => ({}));
+  country = (country || 'US').toUpperCase();
+  const warnings = [];
+
+  try {
+    if (letAiDecide || !niche) {
+      const s = await suggestNiche(country);
+      niche = s.niche;
+    }
+
+    // 1) Live trending searches for the country (real, changes daily)
+    let daily = [];
+    try { daily = await dailyTrends(country); }
+    catch (e) { warnings.push('Daily trends unavailable: ' + e.message); }
+
+    // 2) Rising/related queries for the niche (real, niche+country specific)
+    let related = { top: [], rising: [] };
+    try { related = await relatedQueries(niche, country); }
+    catch (e) { warnings.push('Niche trend detail unavailable: ' + e.message); }
+
+    const trendTerms = [
+      ...related.rising.map((r) => r.query),
+      ...related.top.map((r) => r.query),
+      ...daily.slice(0, 10).map((d) => d.query),
+    ].filter(Boolean);
+
+    // 3) Claude turns the niche + live trends into scored product ideas
+    const ideasRaw = await productIdeas({ niche, country, trendTerms });
+    const products = scoreIdeas(ideasRaw).map((p) => ({ ...p, links: platformLinks(p.name, country) }));
+
+    // 4) optional YouTube demand signal for the niche
+    let youtube = [];
+    if (youtubeEnabled()) { try { youtube = await searchVideos(niche, country); } catch {} }
+
+    return NextResponse.json({
+      niche, country,
+      trending: daily.slice(0, 12),
+      risingQueries: related.rising.slice(0, 12),
+      topQueries: related.top.slice(0, 12),
+      products,
+      youtube,
+      youtubeEnabled: youtubeEnabled(),
+      warnings,
+    });
+  } catch (e) {
+    return NextResponse.json({ error: e.message }, { status: 500 });
+  }
+}
