@@ -43,7 +43,9 @@ function Login({onLogin}){
   const [email,setEmail]=useState('');const[password,setPassword]=useState('');const[err,setErr]=useState(null);const[busy,setBusy]=useState(false);
   const [step,setStep]=useState(0);const[shatter,setShatter]=useState(false);
   useEffect(()=>{const ts=[setTimeout(()=>setStep(1),300),setTimeout(()=>setStep(2),900)];return ()=>ts.forEach(clearTimeout);},[]);
-  const built = email.trim().length>0 && password.length>=3;
+  const leftIn = email.trim().length>0; const rightIn = password.length>=3; const built = leftIn && rightIn;
+  const [merged,setMerged]=useState(false);
+  useEffect(()=>{ if(built){ const t=setTimeout(()=>setMerged(true),1300); return ()=>clearTimeout(t); } setMerged(false); },[built]);
   async function submit(e){e.preventDefault();setErr(null);setBusy(true);
     try{const{token:t,user}=await api('/api/login',{method:'POST',body:{email,password,deviceId:deviceId(),deviceLabel:deviceLabel()}});setTok(t);setShatter(true);setTimeout(()=>onLogin(user),1150);}
     catch(e){setErr(e.message);setBusy(false);}}
@@ -58,8 +60,8 @@ function Login({onLogin}){
         <div className={'authfield fromL'+(step>=1?' landed':'')}><input type="text" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)}/><span className="spark"></span></div>
         <div className={'authfield fromR'+(step>=2?' landed':'')}><input type="text" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} style={{WebkitTextSecurity:'disc'}}/><span className="spark"></span></div>
         {err&&<div className="autherr">{err}</div>}
-        <button type="submit" className={'signinBtn'+(built?' built':'')} disabled={busy||!built}>
-          <span className="bh l">{busy?'Signing':'Sign'}</span><span className="bh r">{busy?'in\u2026':'in'}</span><span className="crack"></span>
+        <button type="submit" className={'signinBtn'+(built?' built':'')+(merged?' merged':'')} disabled={busy||!built}>
+          <span className={'bh l'+(leftIn?' in':'')+(merged?' merged':'')}>{busy?'Signing':'Sign'}</span><span className={'bh r'+(rightIn?' in':'')+(merged?' merged':'')}>{busy?'in\u2026':'in'}</span>
         </button>
         {!built&&<div className="buildhint">Type your email &amp; password — the button locks together</div>}
       </form>
