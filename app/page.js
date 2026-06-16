@@ -21,28 +21,33 @@ const EMBLEM_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120
 const EMBLEM_URI = 'data:image/svg+xml,' + encodeURIComponent(EMBLEM_SVG);
 
 export default function Home(){
-  const [user,setUser]=useState(null); const [booting,setBooting]=useState(true);
+  const [user,setUser]=useState(null); const [booting,setBooting]=useState(true); const [gate,setGate]=useState(false);
   useEffect(()=>{(async()=>{try{if(token())setUser(await api('/api/me'));}catch{setTok(null);}setBooting(false);})();},[]);
+  if(!gate) return <Splash onEnter={()=>setGate(true)}/>;
   if(booting) return <main className="wrap"><Brand/></main>;
   if(!user) return <Login onLogin={setUser}/>;
   return <Dashboard user={user} onLogout={()=>{setTok(null);setUser(null);}}/>;
+}
+
+function Splash({onEnter}){
+  return(<main className="wrap loginwrap splash">
+    <div className="splashEmb" onClick={onEnter} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')onEnter();}}><img src={EMBLEM_URI} alt="OaklineLiving"/></div>
+    <div className="splashTitle">OaklineLiving</div>
+    <div className="taptxt">Tap the logo to enter</div>
+  </main>);
 }
 
 function Brand(){return(<header className="brandbar"><img className="logoimg" src={EMBLEM_URI} alt="OaklineLiving" width={42} height={42}/><div><h1>OaklineLiving</h1><p>Live trend &amp; product research</p></div></header>);}
 
 function Login({onLogin}){
   const [email,setEmail]=useState('');const[password,setPassword]=useState('');const[err,setErr]=useState(null);const[busy,setBusy]=useState(false);
-  const [step,setStep]=useState(0);const[shatter,setShatter]=useState(false);const[entered,setEntered]=useState(false);
-  useEffect(()=>{if(!entered)return;const ts=[setTimeout(()=>setStep(1),300),setTimeout(()=>setStep(2),900),setTimeout(()=>setStep(3),1550)];return ()=>ts.forEach(clearTimeout);},[entered]);
+  const [step,setStep]=useState(0);const[shatter,setShatter]=useState(false);
+  useEffect(()=>{const ts=[setTimeout(()=>setStep(1),300),setTimeout(()=>setStep(2),900)];return ()=>ts.forEach(clearTimeout);},[]);
+  const built = email.trim().length>0 && password.length>=3;
   async function submit(e){e.preventDefault();setErr(null);setBusy(true);
     try{const{token:t,user}=await api('/api/login',{method:'POST',body:{email,password,deviceId:deviceId(),deviceLabel:deviceLabel()}});setTok(t);setShatter(true);setTimeout(()=>onLogin(user),1150);}
     catch(e){setErr(e.message);setBusy(false);}}
   const piece=(pos)=>({backgroundImage:'url("'+EMBLEM_URI+'")',backgroundSize:'120px 120px',backgroundPosition:pos});
-  if(!entered) return(<main className="wrap loginwrap splash">
-    <div className="splashEmb" onClick={()=>setEntered(true)} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')setEntered(true);}}><img src={EMBLEM_URI} alt="OaklineLiving"/></div>
-    <div className="splashTitle">OaklineLiving</div>
-    <div className="taptxt">Tap the logo to enter</div>
-  </main>);
   return(<main className="wrap loginwrap">
     <div className={'ball ballL'+(step>=1?' kick':'')} aria-hidden="true"></div>
     <div className={'ball ballR'+(step>=2?' kick':'')} aria-hidden="true"></div>
@@ -53,9 +58,10 @@ function Login({onLogin}){
         <div className={'authfield fromL'+(step>=1?' landed':'')}><input type="text" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)}/><span className="spark"></span></div>
         <div className={'authfield fromR'+(step>=2?' landed':'')}><input type="text" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} style={{WebkitTextSecurity:'disc'}}/><span className="spark"></span></div>
         {err&&<div className="autherr">{err}</div>}
-        <button type="submit" className={'signinBtn'+(step>=3?' built':'')} disabled={busy||!email||!password}>
-          <span className="bh l">{busy?'Signing':'Sign'}</span><span className="bh r">{busy?'in\u2026':'in'}</span><span className="seam"></span>
+        <button type="submit" className={'signinBtn'+(built?' built':'')} disabled={busy||!built}>
+          <span className="bh l">{busy?'Signing':'Sign'}</span><span className="bh r">{busy?'in\u2026':'in'}</span><span className="crack"></span>
         </button>
+        {!built&&<div className="buildhint">Type your email &amp; password — the button locks together</div>}
       </form>
     </section>
     {shatter&&<div className="shatterOverlay"><div className="shatterEmb">

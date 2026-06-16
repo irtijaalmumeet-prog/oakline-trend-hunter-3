@@ -151,3 +151,10 @@ tbody tr{transition:background .2s}tbody tr:hover{background:rgba(201,168,76,0.0
 @keyframes splashIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
 .splashTitle{font-family:'Playfair Display',serif;font-weight:900;font-size:27px;margin-top:18px;background:linear-gradient(90deg,var(--white),var(--gold-light),var(--white));background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 5s linear infinite}
 .taptxt{margin-top:10px;color:var(--gold-light);font-size:12px;letter-spacing:.18em;text-transform:uppercase;animation:pulseHT 1.6s ease-in-out infinite}
+
+/* ===== sign-in crack/weld line (button locks together) ===== */
+.signinBtn .crack{position:absolute;top:0;bottom:0;left:50%;width:3px;margin-left:-1.5px;transform:scaleY(0);transform-origin:center;opacity:0;
+  background:repeating-linear-gradient(170deg,#7a5f22 0 5px,var(--gold-dark) 5px 8px,#5e4717 8px 11px);z-index:2}
+.signinBtn.built .crack{animation:crackIn .5s .5s forwards}
+@keyframes crackIn{0%{transform:scaleY(0);opacity:0}55%{transform:scaleY(1);opacity:1;box-shadow:0 0 16px var(--gold-light)}100%{transform:scaleY(1);opacity:.8;box-shadow:none}}
+.buildhint{margin-top:9px;color:var(--muted);font-size:11px;text-align:center;letter-spacing:.03em}
