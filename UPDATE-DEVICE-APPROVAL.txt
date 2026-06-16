@@ -1,0 +1,45 @@
+========================================================================
+  UPDATE: DEVICE APPROVAL  (clients can only sign in on devices you OK)
+========================================================================
+
+WHAT THIS ADDS
+- When a client signs in on a new device, they are BLOCKED and see
+  "waiting for owner approval". They cannot use the tool.
+- You (owner) see every device under "Manage access" -> "Device approvals".
+- You can Approve, Block, or Forget each device.
+- Approve  -> that device can sign in.
+- Block    -> that device is kicked out immediately and cannot return.
+- Forget   -> device removed; it will ask for approval again next time.
+- Unlimited devices per client, but EACH new one needs your approval.
+- You (owner) are never device-restricted - you sign in from anywhere.
+
+HOW TO PUT THIS UPDATE LIVE  (5 minutes, no new accounts)
+1. Extract this zip OVER your existing app folder so the files are
+   replaced. In PowerShell (one line), using YOUR repo folder path:
+
+   Expand-Archive "PATH\TO\OaklineApp-DeviceApproval.zip" "$HOME\Desktop\unzipped" -Force
+
+   Then copy everything from
+   $HOME\Desktop\unzipped\oakline-trend-hunter
+   into your GitHub repo folder (the one GitHub Desktop tracks),
+   overwriting when asked.
+
+   (Simplest: replace these files in your repo folder -
+     lib\store.js, lib\auth.js, app\page.js,
+     app\api\login\route.js, app\api\me\route.js, app\api\hunt\route.js,
+     app\api\clients\route.js,
+     and ADD the new folder app\api\devices\route.js)
+
+2. Open GitHub Desktop. It shows the changed files on the left.
+   Type a summary like "add device approval" -> Commit to main -> Push origin.
+
+3. Vercel auto-redeploys in ~1-2 minutes. Done - the live link now has it.
+
+NOTE: no new environment variables are needed. It uses the same Neon
+database (DATABASE_URL) you already set. A new "devices" table is
+created automatically the first time.
+
+HONEST LIMIT: this recognizes a BROWSER, not physical hardware. If a
+client clears their browser data or uses another browser, it looks like
+a new device - which simply triggers another approval request (they
+still can't get in without you). Good access control, not unbeatable.

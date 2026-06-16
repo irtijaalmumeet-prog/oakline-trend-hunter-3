@@ -1,14 +1,17 @@
 import { NextResponse } from 'next/server';
-import { userFromReq } from '../../../lib/auth.js';
+import { userFromReq, clientDeviceActive } from '../../../lib/auth.js';
 import { dailyTrends, relatedQueries } from '../../../lib/googleTrends.js';
 import { productIdeas, suggestNiche } from '../../../lib/claude.js';
 import { scoreIdeas } from '../../../lib/score.js';
 import { platformLinks } from '../../../lib/platformLinks.js';
 import { searchVideos, youtubeEnabled } from '../../../lib/youtube.js';
 
+export const runtime = 'nodejs';
+
 export async function POST(req) {
   const u = userFromReq(req);
   if (!u) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+  if (!(await clientDeviceActive(u))) return NextResponse.json({ error: 'device_revoked', message: 'This device is no longer approved.' }, { status: 403 });
 
   let { niche, country, letAiDecide } = await req.json().catch(() => ({}));
   country = (country || 'US').toUpperCase();
