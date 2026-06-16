@@ -1,28 +1,45 @@
-:root{--accent:#1f7a5c;--accent2:#0f3d2e;--bg:#0b1411;--panel:#11201a;--panel2:#16271f;--line:#25453a;--text:#e8f2ee;--muted:#8fb3a6}
-*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif}
-.wrap{max-width:1000px;margin:0 auto;padding:28px 20px 64px}
-.brandbar{display:flex;align-items:center;gap:12px;margin-bottom:24px}
-.logo{width:40px;height:40px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:800}
-.brandbar h1{font-size:18px;margin:0}.brandbar p{margin:0;font-size:12px;color:var(--muted)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
-.card h2{margin:0 0 4px;font-size:16px}.hint{color:var(--muted);font-size:13px;margin:0 0 14px}
+/* OaklineLiving black & gold theme */
+:root{
+  --black:#0a0a0a;--gold:#c9a84c;--gold-light:#e8c96b;--gold-dark:#9a7a2e;
+  --white:#f5f0e8;--grey:#1a1a1a;--grey2:#2a2a2a;--line:rgba(201,168,76,0.18);
+  --muted:#888;--text:#f5f0e8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--black);color:var(--text);font-family:'DM Sans',ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 60% 50% at 80% 0%,rgba(201,168,76,0.06) 0%,transparent 70%),
+  linear-gradient(rgba(201,168,76,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.025) 1px,transparent 1px);
+  background-size:auto,60px 60px,60px 60px}
+.wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:30px 20px 72px}
+.brandbar{display:flex;align-items:center;gap:13px;margin-bottom:26px}
+.logo{width:42px;height:42px;border-radius:3px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));display:grid;place-items:center;font-weight:900;color:var(--black);font-family:'Playfair Display',serif;letter-spacing:.02em}
+.brandbar h1{font-family:'Playfair Display',serif;font-size:20px;margin:0;font-weight:900;letter-spacing:.01em}
+.brandbar p{margin:0;font-size:12px;color:var(--muted);letter-spacing:.04em}
+.card{background:var(--grey);border:1px solid var(--line);border-radius:5px;padding:22px;margin-bottom:16px}
+.card h2{margin:0 0 5px;font-size:17px;font-family:'Playfair Display',serif;font-weight:700}
+.hint{color:var(--muted);font-size:13px;margin:0 0 14px;line-height:1.6}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;font-size:13px}
-.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip{padding:8px 13px;border-radius:2px;border:1px solid var(--line);background:var(--grey2);color:var(--text);cursor:pointer;font-size:13px;letter-spacing:.02em;transition:all .2s}
+.chip:hover{border-color:var(--gold)}
+.chip.on{background:var(--gold);border-color:var(--gold);color:var(--black);font-weight:600}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-input[type=text]{flex:1;min-width:220px;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:14px}
+input[type=text]{flex:1;min-width:200px;padding:11px 13px;border-radius:2px;border:1px solid rgba(255,255,255,0.1);background:var(--grey2);color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
+input[type=text]:focus{border-color:var(--gold)}
 .toggle{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}
-.btn{padding:11px 16px;border-radius:10px;border:none;cursor:pointer;background:var(--accent);color:#fff;font-weight:600;font-size:14px;text-decoration:none;display:inline-block}
-.btn:disabled{opacity:.5;cursor:not-allowed}.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
-.btn.sm{padding:6px 10px;font-size:12px}
+.btn{padding:11px 18px;border-radius:2px;border:none;cursor:pointer;background:var(--gold);color:var(--black);font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;display:inline-block;transition:background .2s,transform .2s}
+.btn:hover{background:var(--gold-light);transform:translateY(-1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);text-transform:none;letter-spacing:0;font-weight:600}
+.btn.ghost:hover{border-color:var(--gold);color:var(--gold);background:transparent}
+.btn.sm{padding:6px 11px;font-size:11px}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--muted);font-weight:600}
-.score{font-weight:800}.s-hi{color:#3ee08f}.s-mid{color:#d8c45a}.s-lo{color:#c98}
-.tag{display:inline-block;padding:2px 7px;border-radius:6px;background:var(--panel2);border:1px solid var(--line);font-size:11px;margin:2px 4px 2px 0;color:var(--text);text-decoration:none}
-.tag:hover{border-color:var(--accent)}
-.pill{display:inline-block;padding:3px 9px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font-size:12px;margin:3px 5px 3px 0}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.06);vertical-align:top}
+th{color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:11px}
+.score{font-weight:800;font-family:'Playfair Display',serif}.s-hi{color:var(--gold-light)}.s-mid{color:var(--gold)}.s-lo{color:#b98}
+.tag{display:inline-block;padding:3px 8px;border-radius:2px;background:rgba(201,168,76,0.08);border:1px solid var(--line);font-size:11px;margin:2px 4px 2px 0;color:var(--gold-light);text-decoration:none}
+.tag:hover{border-color:var(--gold);background:rgba(201,168,76,0.15)}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(201,168,76,0.06);border:1px solid var(--line);font-size:12px;margin:3px 5px 3px 0;color:var(--white)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:760px){.grid2{grid-template-columns:1fr}}
-.spinner{width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;display:inline-block;animation:spin 1s linear infinite;vertical-align:middle}
+.spinner{width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--gold);border-radius:50%;display:inline-block;animation:spin 1s linear infinite;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}

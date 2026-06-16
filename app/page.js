@@ -58,20 +58,27 @@ function Dashboard({user,onLogout}){
 }
 
 function Admin(){
-  const[clients,setClients]=useState([]);const[email,setEmail]=useState('');const[created,setCreated]=useState(null);const[err,setErr]=useState(null);
+  const[clients,setClients]=useState([]);const[email,setEmail]=useState('');const[days,setDays]=useState('');const[created,setCreated]=useState(null);const[err,setErr]=useState(null);
   async function refresh(){try{setClients((await api('/api/clients')).clients);}catch(e){setErr(e.message);}}
   useEffect(()=>{refresh();},[]);
-  async function add(e){e.preventDefault();setErr(null);setCreated(null);try{setCreated(await api('/api/clients',{method:'POST',body:{email}}));setEmail('');refresh();}catch(e){setErr(e.message);}}
+  async function add(e){e.preventDefault();setErr(null);setCreated(null);try{setCreated(await api('/api/clients',{method:'POST',body:{email,accessDays:days?Number(days):0}}));setEmail('');setDays('');refresh();}catch(e){setErr(e.message);}}
   async function remove(em){if(!confirm('Remove '+em+'? Their devices are removed too.'))return;await api('/api/clients?email='+encodeURIComponent(em),{method:'DELETE'});refresh();}
+  async function setPw(em){const pw=prompt('New password for '+em+':');if(!pw)return;try{await api('/api/clients',{method:'PUT',body:{email:em,password:pw}});alert('Password updated. Share it with '+em+'.');}catch(e){alert(e.message);}}
+  async function setDaysFor(em){const d=prompt('How many days from now can '+em+' use the tool?\n(Enter a number, or 0 for unlimited)');if(d===null)return;try{await api('/api/clients',{method:'PUT',body:{email:em,accessDays:Number(d)||0}});refresh();}catch(e){alert(e.message);}}
+  function expiryLabel(c){ if(!c.expiresAt) return <span className="hint">No limit</span>; const exp=new Date(c.expiresAt); const left=Math.ceil((c.expiresAt-Date.now())/86400000); return left>0?<span style={{color:'#e8c96b'}}>{exp.toLocaleDateString()} ({left}d left)</span>:<span style={{color:'#e88'}}>Expired</span>; }
   return(<>
   <section className="card"><h2>Client access control</h2>
-    <p className="hint">Add a client by email and share the temporary password.</p>
-    <form onSubmit={add} className="row"><input type="text" placeholder="client@email.com" value={email} onChange={e=>setEmail(e.target.value)}/><button className="btn">Add client</button></form>
+    <p className="hint">Add a client by email. Optionally set how many days they can use the tool (blank = unlimited).</p>
+    <form onSubmit={add} className="row"><input type="text" placeholder="client@email.com" value={email} onChange={e=>setEmail(e.target.value)}/><input type="text" placeholder="days (optional)" value={days} onChange={e=>setDays(e.target.value.replace(/[^0-9]/g,''))} style={{maxWidth:140,minWidth:120}}/><button className="btn">Add client</button></form>
     {err&&<p style={{color:'#e88'}}>{err}</p>}
     {created&&<p style={{fontSize:13}}>Created <b>{created.email}</b> — temp password: <code className="tag">{created.tempPassword}</code></p>}
-    <table style={{marginTop:14}}><thead><tr><th>Client</th><th>Added</th><th></th></tr></thead><tbody>
-      {clients.map(c=>(<tr key={c.email}><td>{c.email}</td><td className="hint">{c.createdAt?new Date(c.createdAt).toLocaleDateString():''}</td><td><button className="btn ghost sm" onClick={()=>remove(c.email)}>Remove</button></td></tr>))}
-      {clients.length===0&&<tr><td colSpan={3} className="hint">No clients yet.</td></tr>}
+    <table style={{marginTop:14}}><thead><tr><th>Client</th><th>Access</th><th>Added</th><th>Actions</th></tr></thead><tbody>
+      {clients.map(c=>(<tr key={c.email}><td>{c.email}</td><td>{expiryLabel(c)}</td><td className="hint">{c.createdAt?new Date(c.createdAt).toLocaleDateString():''}</td><td className="row" style={{gap:6}}>
+        <button className="btn ghost sm" onClick={()=>setPw(c.email)}>Set password</button>
+        <button className="btn ghost sm" onClick={()=>setDaysFor(c.email)}>Set days</button>
+        <button className="btn ghost sm" onClick={()=>remove(c.email)}>Remove</button>
+      </td></tr>))}
+      {clients.length===0&&<tr><td colSpan={4} className="hint">No clients yet.</td></tr>}
     </tbody></table>
   </section>
   <Devices/>

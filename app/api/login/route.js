@@ -14,6 +14,10 @@ export async function POST(req) {
   if (user.role !== 'client') {
     return NextResponse.json({ token: issueToken(user), user: { email: user.email, role: user.role } });
   }
+  // Access expiry (owner-set timer)
+  if (user.expiresAt && Date.now() > user.expiresAt) {
+    return NextResponse.json({ error: 'access_expired', message: 'Your access has expired. Please contact the owner.' }, { status: 403 });
+  }
   if (!deviceId) {
     return NextResponse.json({ error: 'no_device', message: 'Could not identify this device. Enable cookies/site data and retry.' }, { status: 400 });
   }
