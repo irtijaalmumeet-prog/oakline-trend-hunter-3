@@ -32,12 +32,17 @@ function Brand(){return(<header className="brandbar"><img className="logoimg" sr
 
 function Login({onLogin}){
   const [email,setEmail]=useState('');const[password,setPassword]=useState('');const[err,setErr]=useState(null);const[busy,setBusy]=useState(false);
-  const [step,setStep]=useState(0);const[shatter,setShatter]=useState(false);
-  useEffect(()=>{const ts=[setTimeout(()=>setStep(1),400),setTimeout(()=>setStep(2),1000),setTimeout(()=>setStep(3),1650)];return ()=>ts.forEach(clearTimeout);},[]);
+  const [step,setStep]=useState(0);const[shatter,setShatter]=useState(false);const[entered,setEntered]=useState(false);
+  useEffect(()=>{if(!entered)return;const ts=[setTimeout(()=>setStep(1),300),setTimeout(()=>setStep(2),900),setTimeout(()=>setStep(3),1550)];return ()=>ts.forEach(clearTimeout);},[entered]);
   async function submit(e){e.preventDefault();setErr(null);setBusy(true);
     try{const{token:t,user}=await api('/api/login',{method:'POST',body:{email,password,deviceId:deviceId(),deviceLabel:deviceLabel()}});setTok(t);setShatter(true);setTimeout(()=>onLogin(user),1150);}
     catch(e){setErr(e.message);setBusy(false);}}
   const piece=(pos)=>({backgroundImage:'url("'+EMBLEM_URI+'")',backgroundSize:'120px 120px',backgroundPosition:pos});
+  if(!entered) return(<main className="wrap loginwrap splash">
+    <div className="splashEmb" onClick={()=>setEntered(true)} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')setEntered(true);}}><img src={EMBLEM_URI} alt="OaklineLiving"/></div>
+    <div className="splashTitle">OaklineLiving</div>
+    <div className="taptxt">Tap the logo to enter</div>
+  </main>);
   return(<main className="wrap loginwrap">
     <div className={'ball ballL'+(step>=1?' kick':'')} aria-hidden="true"></div>
     <div className={'ball ballR'+(step>=2?' kick':'')} aria-hidden="true"></div>

@@ -1,24 +1,17 @@
 ========================================================================
-  LOGO + CINEMATIC LOGIN ANIMATION
+  LATEST UPDATE — everything in one
 ========================================================================
-- New OaklineLiving emblem (gold shopping bag + oak leaf) used as the
-  brand logo across the tool.
-- Login sequence: two footballs are kicked in from both sides, the email
-  and password fields BURST into place, then the Sign-in button ASSEMBLES
-  from two halves that weld together.
-- On sign-in, your emblem appears then SHATTERS into pieces, revealing
-  the dashboard.
-- While a hunt runs, the emblem pulses as a loader, then results appear.
-- Honest note: the real footballers (Messi/De Paul) and the Shopify logo
-  are NOT used - those are real people / a trademark and can't go in a
-  commercial product. Generic footballs + your own emblem are used.
-
-(Also still included: hunt fix so products always show, 100+ countries,
- device approval, client passwords, access timer, black & gold theme.)
+- Facebook Ads Library link now opens ACTIVE ads only (currently running).
+- TikTok link biased to active / currently-running top ads (recent period).
+- Logo SPLASH first: your logo shows, click it to open the login.
+- OaklineLiving logo + cinematic login (football kick, burst fields,
+  button assembles, emblem shatters) + hunt loader.
+- Hunt fix: products always show. 100+ countries.
+- Device approval, client passwords, access timer, black & gold theme.
 
 ------------------------------------------------------------------------
 PUT IT LIVE (one line, then commit/push)
 ------------------------------------------------------------------------
-$z = Get-ChildItem "$env:LOCALAPPDATA\Packages" -Recurse -Filter "OaklineApp-Logo-Animation.zip" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime | Select-Object -Last 1; if($z){ Expand-Archive $z.FullName "$env:TEMP\othla" -Force; Copy-Item "$env:TEMP\othla\oakline-trend-hunter\*" "C:\Users\ASUS-PC\OneDrive\Documents\oakline-trend-hunter\" -Recurse -Force; "DONE -> $($z.FullName)" } else { "ZIP NOT FOUND" }
+$z = Get-ChildItem "$env:LOCALAPPDATA\Packages" -Recurse -Filter "OaklineApp-Update.zip" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime | Select-Object -Last 1; if($z){ Expand-Archive $z.FullName "$env:TEMP\othup" -Force; Copy-Item "$env:TEMP\othup\oakline-trend-hunter\*" "C:\Users\ASUS-PC\OneDrive\Documents\oakline-trend-hunter\" -Recurse -Force; "DONE -> $($z.FullName)" } else { "ZIP NOT FOUND" }
 
-Then GitHub Desktop -> "logo + login animation" -> Commit to main -> Push origin.
+Then GitHub Desktop -> "active ads + logo + animation" -> Commit to main -> Push origin.

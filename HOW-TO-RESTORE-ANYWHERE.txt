@@ -1,0 +1,44 @@
+========================================================================
+  OAKLINELIVING TREND HUNTER — FULL BACKUP & RESTORE
+========================================================================
+
+WHAT THIS IS
+This zip is the COMPLETE app (all code). Keep it anywhere - Google Drive,
+USB, email to yourself. It does NOT contain your secret keys (safe to store).
+
+YOU ARE ALREADY INDEPENDENT OF YOUR PC
+- The live tool runs on VERCEL (cloud) 24/7. You + clients just open the
+  vercel.app link in any browser. No PC required to use it.
+- The code is in your GITHUB repo (cloud). Reachable from any computer.
+- Your keys live in VERCEL settings, not in any file.
+
+KEEP THESE 4 THINGS SAFE (write them in a note):
+  1) GitHub login
+  2) Vercel login
+  3) Neon database connection string (postgres://...)
+  4) Your CLAUDE_API_KEY, OWNER_EMAIL, OWNER_PASSWORD, JWT_SECRET
+With those, you can rebuild everything on ANY computer.
+
+------------------------------------------------------------------------
+RESTORE FROM SCRATCH ON A NEW PC (only if ever needed)
+------------------------------------------------------------------------
+A) Just to USE it: open your vercel.app link. Done. (nothing to install)
+
+B) To EDIT/redeploy from a new PC:
+   1. Install Node.js (nodejs.org) and GitHub Desktop (desktop.github.com).
+   2. In GitHub Desktop: File -> Clone repository -> pick oakline-trend-hunter.
+      (or extract this zip into a folder)
+   3. Edit files, then Commit -> Push. Vercel redeploys automatically.
+
+C) To DEPLOY a brand-new copy (e.g. lost the old one):
+   1. Extract this zip. Upload the folder contents to a new GitHub repo.
+   2. On vercel.com -> Add New Project -> import that repo.
+   3. Add Environment Variables (from your saved note):
+      CLAUDE_API_KEY, CLAUDE_MODEL=claude-sonnet-4-6, OWNER_EMAIL,
+      OWNER_PASSWORD, JWT_SECRET, DATABASE_URL
+   4. Deploy. You get a new live link.
+
+To RUN locally on a PC: extract, open the folder in PowerShell, then:
+   npm install
+   copy .env.example .env.local   (fill in your keys)
+   npm run dev    ->  http://localhost:3000
