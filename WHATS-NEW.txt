@@ -1,37 +1,26 @@
 ========================================================================
-  WHAT'S NEW IN THIS UPDATE
+  WHAT'S NEW
 ========================================================================
+FUTURISTIC LOOK (this update)
+- Animated glowing grid background with a slow scanning light sweep.
+- Cards fade/slide in with a staggered entrance; gold edge glow on hover.
+- Logo pulses with a soft gold glow; title has a shimmering gold sheen.
+- Buttons have a light "shine sweep" on hover; inputs glow gold on focus.
+- High scores (8+) softly pulse; table rows highlight on hover.
+- Sleek glowing scanner while a hunt runs.
+- Respects "reduce motion" accessibility setting.
 
-1) LOOK — black & gold theme matching oaklineliving (Playfair Display
-   headings, gold accents on near-black). No setup needed.
-
-2) RESULTS — each hunt now shows up to 15 products, and ONLY products
-   scoring 8/10 or higher. (Strict: some hunts may show fewer if not
-   many ideas reach 8+.)
-
-3) CLIENT PASSWORD CONTROL — in Manage access, each client row now has
-   "Set password" so you can set/replace a client's password anytime.
-
-4) ACCESS TIMER — set how long a client may use the tool:
-   - When adding a client, type a number of days (blank = unlimited).
-   - Or later, click "Set days" on a client (0 = unlimited).
-   - When time runs out, that client is blocked automatically until you
-     extend it. The Access column shows the expiry / days left.
-
-5) DEVICE APPROVAL (from before) still applies on top of all this.
+EARLIER IN THIS BUILD
+- Black & gold theme matching oaklineliving.
+- Hunts show up to 15 products, only those scoring 8/10+.
+- Per-client "Set password" (change a client's password anytime).
+- Access timer: set days per client; auto-blocks when time runs out.
+- Device approval: new devices need your approval; block kicks out instantly.
 
 ------------------------------------------------------------------------
-HOW TO PUT THIS LIVE  (same as last time)
+PUT IT LIVE (one line in PowerShell, then commit/push)
 ------------------------------------------------------------------------
-1. In PowerShell, run this ONE line to extract + copy over your repo
-   (it finds the zip automatically):
+$z = Get-ChildItem "$env:LOCALAPPDATA\Packages" -Recurse -Filter "OaklineApp-Futuristic.zip" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime | Select-Object -Last 1; if($z){ Expand-Archive $z.FullName "$env:TEMP\othfx" -Force; Copy-Item "$env:TEMP\othfx\oakline-trend-hunter\*" "C:\Users\ASUS-PC\OneDrive\Documents\oakline-trend-hunter\" -Recurse -Force; "DONE -> $($z.FullName)" } else { "ZIP NOT FOUND" }
 
-   $z = Get-ChildItem "$env:LOCALAPPDATA\Packages" -Recurse -Filter "OaklineApp-Custom.zip" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime | Select-Object -Last 1; if($z){ Expand-Archive $z.FullName "$env:TEMP\othcustom" -Force; Copy-Item "$env:TEMP\othcustom\oakline-trend-hunter\*" "C:\Users\ASUS-PC\OneDrive\Documents\oakline-trend-hunter\" -Recurse -Force; "DONE -> $($z.FullName)" } else { "ZIP NOT FOUND" }
-
-2. Open GitHub Desktop -> it shows the changed files -> Summary
-   "customize: theme, 15/8+, password & timer" -> Commit to main -> Push origin.
-
-3. Vercel auto-redeploys in ~1-2 minutes. Done.
-
-No new environment variables. Uses the same Neon database; a new
-"expires_at" column is added automatically.
+Then GitHub Desktop -> summary "futuristic animations" -> Commit to main -> Push origin.
+Vercel redeploys automatically in ~1-2 minutes.

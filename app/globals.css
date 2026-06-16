@@ -1,45 +1,88 @@
-/* OaklineLiving black & gold theme */
+/* OaklineLiving black & gold theme — futuristic edition */
 :root{
   --black:#0a0a0a;--gold:#c9a84c;--gold-light:#e8c96b;--gold-dark:#9a7a2e;
-  --white:#f5f0e8;--grey:#1a1a1a;--grey2:#2a2a2a;--line:rgba(201,168,76,0.18);
-  --muted:#888;--text:#f5f0e8;
+  --white:#f5f0e8;--grey:#16160f;--grey2:#22220f;--line:rgba(201,168,76,0.18);
+  --muted:#8a8472;--text:#f5f0e8;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--black);color:var(--text);font-family:'DM Sans',ui-sans-serif,system-ui,Segoe UI,Roboto,sans-serif}
+
+/* animated grid + drifting glow background */
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:radial-gradient(ellipse 60% 50% at 80% 0%,rgba(201,168,76,0.06) 0%,transparent 70%),
-  linear-gradient(rgba(201,168,76,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.025) 1px,transparent 1px);
-  background-size:auto,60px 60px,60px 60px}
+  background:
+    radial-gradient(ellipse 50% 40% at 80% 0%,rgba(201,168,76,0.10) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 50% at 0% 100%,rgba(201,168,76,0.06) 0%,transparent 70%),
+    linear-gradient(rgba(201,168,76,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(201,168,76,0.03) 1px,transparent 1px);
+  background-size:auto,auto,46px 46px,46px 46px;
+  animation:gridDrift 24s linear infinite;}
+@keyframes gridDrift{from{background-position:0 0,0 0,0 0,0 0}to{background-position:0 0,0 0,46px 46px,46px 46px}}
+/* scanning line sweeping down the page */
+body::after{content:'';position:fixed;left:0;right:0;height:140px;top:-140px;pointer-events:none;z-index:0;
+  background:linear-gradient(to bottom,transparent,rgba(201,168,76,0.06),transparent);
+  animation:scan 7s ease-in-out infinite;}
+@keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(120vh)}}
+
 .wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:30px 20px 72px}
-.brandbar{display:flex;align-items:center;gap:13px;margin-bottom:26px}
-.logo{width:42px;height:42px;border-radius:3px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));display:grid;place-items:center;font-weight:900;color:var(--black);font-family:'Playfair Display',serif;letter-spacing:.02em}
-.brandbar h1{font-family:'Playfair Display',serif;font-size:20px;margin:0;font-weight:900;letter-spacing:.01em}
+.brandbar{display:flex;align-items:center;gap:13px;margin-bottom:26px;animation:fadeUp .6s ease both}
+.logo{width:42px;height:42px;border-radius:3px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));display:grid;place-items:center;font-weight:900;color:var(--black);font-family:'Playfair Display',serif;letter-spacing:.02em;animation:logoGlow 3s ease-in-out infinite}
+@keyframes logoGlow{0%,100%{box-shadow:0 0 0 rgba(201,168,76,0)}50%{box-shadow:0 0 18px rgba(201,168,76,0.55)}}
+.brandbar h1{font-family:'Playfair Display',serif;font-size:20px;margin:0;font-weight:900;letter-spacing:.01em;
+  background:linear-gradient(90deg,var(--white),var(--gold-light),var(--white));background-size:200% auto;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
+@keyframes shimmer{to{background-position:200% center}}
 .brandbar p{margin:0;font-size:12px;color:var(--muted);letter-spacing:.04em}
-.card{background:var(--grey);border:1px solid var(--line);border-radius:5px;padding:22px;margin-bottom:16px}
+
+/* cards fade up + gentle stagger */
+.card{background:linear-gradient(180deg,var(--grey),#121208);border:1px solid var(--line);border-radius:6px;padding:22px;margin-bottom:16px;
+  position:relative;overflow:hidden;animation:fadeUp .55s ease both;transition:border-color .3s,box-shadow .3s,transform .3s}
+.card:hover{border-color:rgba(201,168,76,0.4);box-shadow:0 6px 30px rgba(0,0,0,0.4),0 0 0 1px rgba(201,168,76,0.06)}
+.card::after{content:'';position:absolute;top:0;left:-1px;height:2px;width:0;background:linear-gradient(90deg,var(--gold),transparent);transition:width .5s ease}
+.card:hover::after{width:60%}
+.card:nth-child(2){animation-delay:.06s}.card:nth-child(3){animation-delay:.12s}.card:nth-child(4){animation-delay:.18s}.card:nth-child(5){animation-delay:.24s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
 .card h2{margin:0 0 5px;font-size:17px;font-family:'Playfair Display',serif;font-weight:700}
 .hint{color:var(--muted);font-size:13px;margin:0 0 14px;line-height:1.6}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{padding:8px 13px;border-radius:2px;border:1px solid var(--line);background:var(--grey2);color:var(--text);cursor:pointer;font-size:13px;letter-spacing:.02em;transition:all .2s}
-.chip:hover{border-color:var(--gold)}
-.chip.on{background:var(--gold);border-color:var(--gold);color:var(--black);font-weight:600}
+.chip:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 4px 14px rgba(201,168,76,0.12)}
+.chip.on{background:var(--gold);border-color:var(--gold);color:var(--black);font-weight:600;box-shadow:0 0 14px rgba(201,168,76,0.45)}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-input[type=text]{flex:1;min-width:200px;padding:11px 13px;border-radius:2px;border:1px solid rgba(255,255,255,0.1);background:var(--grey2);color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
-input[type=text]:focus{border-color:var(--gold)}
+input[type=text]{flex:1;min-width:200px;padding:11px 13px;border-radius:2px;border:1px solid rgba(255,255,255,0.1);background:var(--grey2);color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
+input[type=text]:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.18),0 0 16px rgba(201,168,76,0.12)}
 .toggle{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}
-.btn{padding:11px 18px;border-radius:2px;border:none;cursor:pointer;background:var(--gold);color:var(--black);font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;display:inline-block;transition:background .2s,transform .2s}
-.btn:hover{background:var(--gold-light);transform:translateY(-1px)}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* buttons with shine sweep */
+.btn{position:relative;overflow:hidden;padding:11px 18px;border-radius:2px;border:none;cursor:pointer;background:var(--gold);color:var(--black);font-weight:700;font-size:13px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;display:inline-block;transition:background .2s,transform .2s,box-shadow .2s}
+.btn:hover{background:var(--gold-light);transform:translateY(-1px);box-shadow:0 6px 20px rgba(201,168,76,0.35)}
+.btn::before{content:'';position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.55),transparent);transform:skewX(-20deg);transition:left .6s ease}
+.btn:hover::before{left:140%}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn:disabled::before{display:none}
 .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--text);text-transform:none;letter-spacing:0;font-weight:600}
-.btn.ghost:hover{border-color:var(--gold);color:var(--gold);background:transparent}
+.btn.ghost:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.05);box-shadow:none}
+.btn.ghost::before{display:none}
 .btn.sm{padding:6px 11px;font-size:11px}
+
 table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{text-align:left;padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.06);vertical-align:top}
 th{color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:11px}
-.score{font-weight:800;font-family:'Playfair Display',serif}.s-hi{color:var(--gold-light)}.s-mid{color:var(--gold)}.s-lo{color:#b98}
-.tag{display:inline-block;padding:3px 8px;border-radius:2px;background:rgba(201,168,76,0.08);border:1px solid var(--line);font-size:11px;margin:2px 4px 2px 0;color:var(--gold-light);text-decoration:none}
-.tag:hover{border-color:var(--gold);background:rgba(201,168,76,0.15)}
-.pill{display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(201,168,76,0.06);border:1px solid var(--line);font-size:12px;margin:3px 5px 3px 0;color:var(--white)}
+tbody tr{transition:background .2s}tbody tr:hover{background:rgba(201,168,76,0.04)}
+.score{font-weight:800;font-family:'Playfair Display',serif}
+.s-hi{color:var(--gold-light);text-shadow:0 0 10px rgba(201,168,76,0.5);animation:scorePulse 2.4s ease-in-out infinite}
+@keyframes scorePulse{0%,100%{text-shadow:0 0 8px rgba(201,168,76,0.35)}50%{text-shadow:0 0 16px rgba(201,168,76,0.7)}}
+.s-mid{color:var(--gold)}.s-lo{color:#b98}
+.tag{display:inline-block;padding:3px 8px;border-radius:2px;background:rgba(201,168,76,0.08);border:1px solid var(--line);font-size:11px;margin:2px 4px 2px 0;color:var(--gold-light);text-decoration:none;transition:all .2s}
+.tag:hover{border-color:var(--gold);background:rgba(201,168,76,0.18);box-shadow:0 0 10px rgba(201,168,76,0.25)}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(201,168,76,0.06);border:1px solid var(--line);font-size:12px;margin:3px 5px 3px 0;color:var(--white);animation:fadeUp .4s ease both}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:760px){.grid2{grid-template-columns:1fr}}
-.spinner{width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--gold);border-radius:50%;display:inline-block;animation:spin 1s linear infinite;vertical-align:middle}
+
+/* futuristic dual-ring scanner for hunting */
+.spinner{width:18px;height:18px;border:2px solid rgba(201,168,76,0.2);border-top-color:var(--gold);border-radius:50%;display:inline-block;animation:spin .8s linear infinite;vertical-align:middle;position:relative;box-shadow:0 0 10px rgba(201,168,76,0.4)}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important}
+}
