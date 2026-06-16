@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 
-const COUNTRIES = [['US','United States'],['GB','United Kingdom'],['AE','UAE'],['AU','Australia'],['CA','Canada'],['DE','Germany'],['FR','France'],['SA','Saudi Arabia'],['NL','Netherlands'],['IN','India']];
+const COUNTRIES = [['US','United States'],['GB','United Kingdom'],['CA','Canada'],['AU','Australia'],['AE','United Arab Emirates'],['SA','Saudi Arabia'],['DE','Germany'],['FR','France'],['NL','Netherlands'],['IN','India'],['IT','Italy'],['ES','Spain'],['PT','Portugal'],['IE','Ireland'],['BE','Belgium'],['CH','Switzerland'],['AT','Austria'],['SE','Sweden'],['NO','Norway'],['DK','Denmark'],['FI','Finland'],['PL','Poland'],['CZ','Czechia'],['RO','Romania'],['GR','Greece'],['HU','Hungary'],['BG','Bulgaria'],['HR','Croatia'],['SK','Slovakia'],['SI','Slovenia'],['EE','Estonia'],['LV','Latvia'],['LT','Lithuania'],['LU','Luxembourg'],['IS','Iceland'],['MT','Malta'],['CY','Cyprus'],['NZ','New Zealand'],['SG','Singapore'],['MY','Malaysia'],['TH','Thailand'],['ID','Indonesia'],['PH','Philippines'],['VN','Vietnam'],['JP','Japan'],['KR','South Korea'],['CN','China'],['HK','Hong Kong'],['TW','Taiwan'],['PK','Pakistan'],['BD','Bangladesh'],['LK','Sri Lanka'],['NP','Nepal'],['QA','Qatar'],['KW','Kuwait'],['BH','Bahrain'],['OM','Oman'],['JO','Jordan'],['LB','Lebanon'],['IL','Israel'],['TR','Turkey'],['EG','Egypt'],['MA','Morocco'],['DZ','Algeria'],['TN','Tunisia'],['ZA','South Africa'],['NG','Nigeria'],['KE','Kenya'],['GH','Ghana'],['TZ','Tanzania'],['UG','Uganda'],['ET','Ethiopia'],['CM','Cameroon'],['CI',"Cote d'Ivoire"],['SN','Senegal'],['BR','Brazil'],['MX','Mexico'],['AR','Argentina'],['CL','Chile'],['CO','Colombia'],['PE','Peru'],['EC','Ecuador'],['UY','Uruguay'],['PY','Paraguay'],['BO','Bolivia'],['VE','Venezuela'],['CR','Costa Rica'],['PA','Panama'],['DO','Dominican Republic'],['GT','Guatemala'],['RU','Russia'],['UA','Ukraine'],['BY','Belarus'],['KZ','Kazakhstan'],['UZ','Uzbekistan'],['AZ','Azerbaijan'],['GE','Georgia'],['AM','Armenia'],['RS','Serbia'],['BA','Bosnia and Herzegovina'],['MK','North Macedonia'],['AL','Albania'],['MD','Moldova']];
 
 function token(){ if(typeof window==='undefined')return null; return localStorage.getItem('olth'); }
 function setTok(t){ if(t) localStorage.setItem('olth',t); else localStorage.removeItem('olth'); }
@@ -127,9 +127,11 @@ function Hunt(){
     catch(e){setErr(e.message);}finally{setBusy(false);}}
   const can=country&&(ai||niche.trim());
   return(<>
-    <section className="card"><h2>Step 1 — Country</h2><div className="chips">
-      {COUNTRIES.map(([c,l])=>(<button key={c} className={'chip'+(country===c?' on':'')} onClick={()=>setCountry(c)}>{l}</button>))}
-    </div></section>
+    <section className="card"><h2>Step 1 — Country</h2><p className="hint">Choose your target market.</p>
+      <select className="select" value={country} onChange={e=>setCountry(e.target.value)}>
+        {COUNTRIES.map(([c,l])=>(<option key={c} value={c}>{l}</option>))}
+      </select>
+    </section>
     <section className="card"><h2>Step 2 — Niche</h2><p className="hint">Type a niche, or let AI pick a trending one.</p>
       <div className="row">
         <input type="text" placeholder="e.g. home gadgets, pet accessories" value={niche} disabled={ai} onChange={e=>setNiche(e.target.value)}/>

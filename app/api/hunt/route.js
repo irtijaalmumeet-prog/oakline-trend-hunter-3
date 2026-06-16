@@ -41,12 +41,16 @@ export async function POST(req) {
 
     // 3) Claude turns the niche + live trends into scored product ideas
     const ideasRaw = await productIdeas({ niche, country, trendTerms });
-    const MIN_SCORE = 8;   // only surface products scoring 8/10 or higher
+    const MIN_SCORE = 8;     // prefer products scoring 8/10 or higher
     const MAX_PRODUCTS = 15; // cap how many to show
-    const products = scoreIdeas(ideasRaw)
-      .filter((p) => p.finalScore >= MIN_SCORE)
-      .slice(0, MAX_PRODUCTS)
-      .map((p) => ({ ...p, links: platformLinks(p.name, country) }));
+    const scored = scoreIdeas(ideasRaw);
+    let chosen = scored.filter((p) => p.finalScore >= MIN_SCORE).slice(0, MAX_PRODUCTS);
+    if (chosen.length === 0) {            // never show an empty result
+      chosen = scored.slice(0, MAX_PRODUCTS);
+      if (chosen.length) warnings.push('No products reached 8/10 this run — showing the strongest available.');
+    }
+    if (scored.length === 0) warnings.push('The AI returned no product ideas — try a different niche or run again.');
+    const products = chosen.map((p) => ({ ...p, links: platformLinks(p.name, country) }));
 
     // 4) optional YouTube demand signal for the niche
     let youtube = [];

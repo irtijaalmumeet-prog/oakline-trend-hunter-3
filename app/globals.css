@@ -86,3 +86,8 @@ tbody tr{transition:background .2s}tbody tr:hover{background:rgba(201,168,76,0.0
 @media (prefers-reduced-motion: reduce){
   *{animation:none!important;transition:none!important}
 }
+
+/* country dropdown */
+.select{width:100%;max-width:360px;padding:11px 13px;border-radius:2px;border:1px solid rgba(255,255,255,0.12);background:var(--grey2);color:var(--text);font-size:14px;font-family:inherit;outline:none;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.18)}
+.select option{background:#16160f;color:var(--text)}

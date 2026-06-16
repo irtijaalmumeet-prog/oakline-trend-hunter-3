@@ -1,26 +1,22 @@
 ========================================================================
-  WHAT'S NEW
+  FIX + COUNTRIES UPDATE
 ========================================================================
-FUTURISTIC LOOK (this update)
-- Animated glowing grid background with a slow scanning light sweep.
-- Cards fade/slide in with a staggered entrance; gold edge glow on hover.
-- Logo pulses with a soft gold glow; title has a shimmering gold sheen.
-- Buttons have a light "shine sweep" on hover; inputs glow gold on focus.
-- High scores (8+) softly pulse; table rows highlight on hover.
-- Sleek glowing scanner while a hunt runs.
-- Respects "reduce motion" accessibility setting.
+FIXED: "tool not hunting / no products"
+- The strict 8/10 filter was hiding ALL results when nothing hit 8.
+- Now: it shows 8/10+ when available; if none reach 8, it shows the
+  strongest products it found (never an empty result), with a note.
+- Google Trends can fail on the server (their unofficial feed blocks
+  hosted IPs) - that only affects the "Trending/Rising" boxes; product
+  ideas come from Claude and now always appear.
 
-EARLIER IN THIS BUILD
-- Black & gold theme matching oaklineliving.
-- Hunts show up to 15 products, only those scoring 8/10+.
-- Per-client "Set password" (change a client's password anytime).
-- Access timer: set days per client; auto-blocks when time runs out.
-- Device approval: new devices need your approval; block kicks out instantly.
+ADDED: all countries
+- The country picker is now a dropdown with 100+ countries.
+
+(Device approval, client passwords, access timer, theme - all still here.)
 
 ------------------------------------------------------------------------
-PUT IT LIVE (one line in PowerShell, then commit/push)
+PUT IT LIVE (one line, then commit/push)
 ------------------------------------------------------------------------
-$z = Get-ChildItem "$env:LOCALAPPDATA\Packages" -Recurse -Filter "OaklineApp-Futuristic.zip" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime | Select-Object -Last 1; if($z){ Expand-Archive $z.FullName "$env:TEMP\othfx" -Force; Copy-Item "$env:TEMP\othfx\oakline-trend-hunter\*" "C:\Users\ASUS-PC\OneDrive\Documents\oakline-trend-hunter\" -Recurse -Force; "DONE -> $($z.FullName)" } else { "ZIP NOT FOUND" }
+$z = Get-ChildItem "$env:LOCALAPPDATA\Packages" -Recurse -Filter "OaklineApp-Fixed.zip" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime | Select-Object -Last 1; if($z){ Expand-Archive $z.FullName "$env:TEMP\othfix" -Force; Copy-Item "$env:TEMP\othfix\oakline-trend-hunter\*" "C:\Users\ASUS-PC\OneDrive\Documents\oakline-trend-hunter\" -Recurse -Force; "DONE -> $($z.FullName)" } else { "ZIP NOT FOUND" }
 
-Then GitHub Desktop -> summary "futuristic animations" -> Commit to main -> Push origin.
-Vercel redeploys automatically in ~1-2 minutes.
+Then GitHub Desktop -> "fix hunt + all countries" -> Commit to main -> Push origin.
