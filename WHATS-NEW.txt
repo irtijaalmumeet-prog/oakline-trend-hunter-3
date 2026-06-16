@@ -1,22 +1,24 @@
 ========================================================================
-  FIX + COUNTRIES UPDATE
+  LOGO + CINEMATIC LOGIN ANIMATION
 ========================================================================
-FIXED: "tool not hunting / no products"
-- The strict 8/10 filter was hiding ALL results when nothing hit 8.
-- Now: it shows 8/10+ when available; if none reach 8, it shows the
-  strongest products it found (never an empty result), with a note.
-- Google Trends can fail on the server (their unofficial feed blocks
-  hosted IPs) - that only affects the "Trending/Rising" boxes; product
-  ideas come from Claude and now always appear.
+- New OaklineLiving emblem (gold shopping bag + oak leaf) used as the
+  brand logo across the tool.
+- Login sequence: two footballs are kicked in from both sides, the email
+  and password fields BURST into place, then the Sign-in button ASSEMBLES
+  from two halves that weld together.
+- On sign-in, your emblem appears then SHATTERS into pieces, revealing
+  the dashboard.
+- While a hunt runs, the emblem pulses as a loader, then results appear.
+- Honest note: the real footballers (Messi/De Paul) and the Shopify logo
+  are NOT used - those are real people / a trademark and can't go in a
+  commercial product. Generic footballs + your own emblem are used.
 
-ADDED: all countries
-- The country picker is now a dropdown with 100+ countries.
-
-(Device approval, client passwords, access timer, theme - all still here.)
+(Also still included: hunt fix so products always show, 100+ countries,
+ device approval, client passwords, access timer, black & gold theme.)
 
 ------------------------------------------------------------------------
 PUT IT LIVE (one line, then commit/push)
 ------------------------------------------------------------------------
-$z = Get-ChildItem "$env:LOCALAPPDATA\Packages" -Recurse -Filter "OaklineApp-Fixed.zip" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime | Select-Object -Last 1; if($z){ Expand-Archive $z.FullName "$env:TEMP\othfix" -Force; Copy-Item "$env:TEMP\othfix\oakline-trend-hunter\*" "C:\Users\ASUS-PC\OneDrive\Documents\oakline-trend-hunter\" -Recurse -Force; "DONE -> $($z.FullName)" } else { "ZIP NOT FOUND" }
+$z = Get-ChildItem "$env:LOCALAPPDATA\Packages" -Recurse -Filter "OaklineApp-Logo-Animation.zip" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime | Select-Object -Last 1; if($z){ Expand-Archive $z.FullName "$env:TEMP\othla" -Force; Copy-Item "$env:TEMP\othla\oakline-trend-hunter\*" "C:\Users\ASUS-PC\OneDrive\Documents\oakline-trend-hunter\" -Recurse -Force; "DONE -> $($z.FullName)" } else { "ZIP NOT FOUND" }
 
-Then GitHub Desktop -> "fix hunt + all countries" -> Commit to main -> Push origin.
+Then GitHub Desktop -> "logo + login animation" -> Commit to main -> Push origin.

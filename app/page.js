@@ -17,6 +17,9 @@ async function api(path,{method='GET',body}={}) {
   const data=await res.json().catch(()=>({})); if(!res.ok) throw new Error(data.message||data.error||('Error '+res.status)); return data;
 }
 
+const EMBLEM_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><linearGradient id="og" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8c96b"/><stop offset="1" stop-color="#9a7a2e"/></linearGradient></defs><rect x="4" y="4" width="112" height="112" rx="22" fill="url(#og)"/><path d="M40 46 h40 a4 4 0 0 1 4 4 l4 36 a6 6 0 0 1 -6 7 H38 a6 6 0 0 1 -6 -7 l4 -36 a4 4 0 0 1 4 -4 z" fill="#0a0a0a"/><path d="M48 47 a12 12 0 0 1 24 0" fill="none" stroke="#0a0a0a" stroke-width="5" stroke-linecap="round"/><path d="M60 60 C60 70 54 74 50 78 C56 78 62 74 62 66 C66 72 72 70 74 66 C68 66 64 62 60 60 Z" fill="#e8c96b"/></svg>';
+const EMBLEM_URI = 'data:image/svg+xml,' + encodeURIComponent(EMBLEM_SVG);
+
 export default function Home(){
   const [user,setUser]=useState(null); const [booting,setBooting]=useState(true);
   useEffect(()=>{(async()=>{try{if(token())setUser(await api('/api/me'));}catch{setTok(null);}setBooting(false);})();},[]);
@@ -25,21 +28,36 @@ export default function Home(){
   return <Dashboard user={user} onLogout={()=>{setTok(null);setUser(null);}}/>;
 }
 
-function Brand(){return(<header className="brandbar"><div className="logo">OL</div><div><h1>Oakline Trend Hunter</h1><p>Live trend &amp; product research</p></div></header>);}
+function Brand(){return(<header className="brandbar"><img className="logoimg" src={EMBLEM_URI} alt="OaklineLiving" width={42} height={42}/><div><h1>OaklineLiving</h1><p>Live trend &amp; product research</p></div></header>);}
 
 function Login({onLogin}){
   const [email,setEmail]=useState('');const[password,setPassword]=useState('');const[err,setErr]=useState(null);const[busy,setBusy]=useState(false);
+  const [step,setStep]=useState(0);const[shatter,setShatter]=useState(false);
+  useEffect(()=>{const ts=[setTimeout(()=>setStep(1),400),setTimeout(()=>setStep(2),1000),setTimeout(()=>setStep(3),1650)];return ()=>ts.forEach(clearTimeout);},[]);
   async function submit(e){e.preventDefault();setErr(null);setBusy(true);
-    try{const{token:t,user}=await api('/api/login',{method:'POST',body:{email,password,deviceId:deviceId(),deviceLabel:deviceLabel()}});setTok(t);onLogin(user);}
-    catch(e){setErr(e.message);}finally{setBusy(false);}}
-  return(<main className="wrap"><Brand/><section className="card" style={{maxWidth:420}}>
-    <h2>Sign in</h2><p className="hint">Owner and client access.</p>
-    <form onSubmit={submit}><div style={{display:'grid',gap:10}}>
-      <input type="text" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)}/>
-      <input type="text" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} style={{WebkitTextSecurity:'disc'}}/>
-      {err&&<div style={{color:'#e88',fontSize:13,lineHeight:1.4}}>{err}</div>}
-      <button className="btn" disabled={busy||!email||!password}>{busy?'Signing in…':'Sign in'}</button>
-    </div></form></section></main>);
+    try{const{token:t,user}=await api('/api/login',{method:'POST',body:{email,password,deviceId:deviceId(),deviceLabel:deviceLabel()}});setTok(t);setShatter(true);setTimeout(()=>onLogin(user),1150);}
+    catch(e){setErr(e.message);setBusy(false);}}
+  const piece=(pos)=>({backgroundImage:'url("'+EMBLEM_URI+'")',backgroundSize:'120px 120px',backgroundPosition:pos});
+  return(<main className="wrap loginwrap">
+    <div className={'ball ballL'+(step>=1?' kick':'')} aria-hidden="true"></div>
+    <div className={'ball ballR'+(step>=2?' kick':'')} aria-hidden="true"></div>
+    <Brand/>
+    <section className="card authcard">
+      <h2>Sign in</h2><p className="hint">Owner and client access.</p>
+      <form onSubmit={submit}>
+        <div className={'authfield fromL'+(step>=1?' landed':'')}><input type="text" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)}/><span className="spark"></span></div>
+        <div className={'authfield fromR'+(step>=2?' landed':'')}><input type="text" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} style={{WebkitTextSecurity:'disc'}}/><span className="spark"></span></div>
+        {err&&<div className="autherr">{err}</div>}
+        <button type="submit" className={'signinBtn'+(step>=3?' built':'')} disabled={busy||!email||!password}>
+          <span className="bh l">{busy?'Signing':'Sign'}</span><span className="bh r">{busy?'in\u2026':'in'}</span><span className="seam"></span>
+        </button>
+      </form>
+    </section>
+    {shatter&&<div className="shatterOverlay"><div className="shatterEmb">
+      <span className="piece" style={piece('0 0')}></span><span className="piece" style={piece('-60px 0')}></span>
+      <span className="piece" style={piece('0 -60px')}></span><span className="piece" style={piece('-60px -60px')}></span>
+    </div></div>}
+  </main>);
 }
 
 function Dashboard({user,onLogout}){
@@ -140,6 +158,7 @@ function Hunt(){
     </section>
     {err&&<section className="card" style={{borderColor:'#a33'}}>{err}</section>}
     <button className="btn" disabled={!can||busy} onClick={run}>{busy?<><span className="spinner"/> Hunting… (10–20s)</>:'Start hunting'}</button>
+    {busy&&<div className="huntOverlay"><img className="huntEmb" src={EMBLEM_URI} alt=""/><div className="huntTxt">Hunting live signals…</div></div>}
     {data&&<Results data={data}/>}
   </>);
 }
