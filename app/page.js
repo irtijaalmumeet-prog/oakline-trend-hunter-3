@@ -19,6 +19,9 @@ async function api(path,{method='GET',body}={}) {
 
 const EMBLEM_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><linearGradient id="og" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8c96b"/><stop offset="1" stop-color="#9a7a2e"/></linearGradient></defs><rect x="4" y="4" width="112" height="112" rx="22" fill="url(#og)"/><path d="M40 46 h40 a4 4 0 0 1 4 4 l4 36 a6 6 0 0 1 -6 7 H38 a6 6 0 0 1 -6 -7 l4 -36 a4 4 0 0 1 4 -4 z" fill="#0a0a0a"/><path d="M48 47 a12 12 0 0 1 24 0" fill="none" stroke="#0a0a0a" stroke-width="5" stroke-linecap="round"/><path d="M60 60 C60 70 54 74 50 78 C56 78 62 74 62 66 C66 72 72 70 74 66 C68 66 64 62 60 60 Z" fill="#e8c96b"/></svg>';
 const EMBLEM_URI = 'data:image/svg+xml,' + encodeURIComponent(EMBLEM_SVG);
+const WA_LINK = 'https://wa.me/393509186568?text=' + encodeURIComponent("Hi OaklineLiving, I'd like to buy / get access to the Trend Hunter tool.");
+function ContactWA({label}){return(<a className="wabtn" href={WA_LINK} target="_blank" rel="noreferrer"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4 4.1-1.3A10 10 0 1 0 12 2zm0 2a8 8 0 1 1-4.2 14.8l-.3-.2-2.4.8.8-2.3-.2-.3A8 8 0 0 1 12 4z"/></svg>{label||'Buy / Get access on WhatsApp'}</a>);}
+
 
 export default function Home(){
   const [user,setUser]=useState(null); const [booting,setBooting]=useState(true); const [gate,setGate]=useState(false);
@@ -34,6 +37,7 @@ function Splash({onEnter}){
     <div className="splashEmb" onClick={onEnter} role="button" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')onEnter();}}><img src={EMBLEM_URI} alt="OaklineLiving"/></div>
     <div className="splashTitle">OaklineLiving</div>
     <div className="taptxt">Tap the logo to enter</div>
+    <div className="contactrow"><span className="hint">Want access? Message us to buy.</span><ContactWA/></div>
   </main>);
 }
 
@@ -65,6 +69,7 @@ function Login({onLogin}){
         </button>
         {!built&&<div className="buildhint">Type your email &amp; password — the button locks together</div>}
       </form>
+      <div className="contactrow"><span className="hint">Don't have access yet? Contact us to buy the tool.</span><ContactWA/></div>
     </section>
     {shatter&&<div className="shatterOverlay"><div className="shatterEmb">
       <span className="piece" style={piece('0 0')}></span><span className="piece" style={piece('-60px 0')}></span>

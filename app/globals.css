@@ -162,3 +162,10 @@ tbody tr{transition:background .2s}tbody tr:hover{background:rgba(201,168,76,0.0
 .signinBtn.built .crack{animation:crackIn .9s 0s forwards}
 @keyframes crackIn{0%{transform:scaleY(.2);opacity:.85}100%{transform:scaleY(1);opacity:1}}
 .buildhint{margin-top:9px;color:var(--muted);font-size:11px;text-align:center;letter-spacing:.03em}
+
+
+/* ===== WhatsApp contact / buy button ===== */
+.contactrow{margin-top:16px;display:flex;flex-direction:column;gap:8px;align-items:center}
+.wabtn{display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#06301a;font-weight:700;font-size:13px;letter-spacing:.02em;padding:11px 18px;border-radius:3px;text-decoration:none;transition:background .2s,transform .2s}
+.wabtn:hover{background:#1fba58;transform:translateY(-1px)}
+.wabtn svg{width:16px;height:16px}
