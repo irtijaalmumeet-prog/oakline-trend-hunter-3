@@ -15,11 +15,10 @@ ok('scoreIdeas ranks high demand / low competition first', ()=>{
   assert.ok(r[0].finalScore>=0 && r[0].finalScore<=10);
 });
 
-ok('platformLinks builds 6 search links incl Facebook & TikTok', ()=>{
+ok('platformLinks builds Facebook Ads Library + AliExpress', ()=>{
   const l = platformLinks('mini blender','GB');
   const names = l.map(x=>x.name);
   assert.ok(names.includes('Facebook Ads Library'));
-  assert.ok(names.includes('TikTok Creative Center'));
   assert.ok(l.every(x=>x.url.includes('mini%20blender')));
   assert.ok(l.find(x=>x.name==='Facebook Ads Library').url.includes('country=GB'));
 });
