@@ -1,42 +1,52 @@
 ========================================================================
-  CONNECT GOOGLE SHEETS  (auto-create an editable sheet per client)
-  For a Google WORKSPACE (business) account. ~15 minutes, one time.
+  CONNECT GOOGLE SHEETS  (personal Gmail / OAuth method)
+  Auto-creates an editable sheet per client in YOUR Google Drive.
+  One time, ~15 min. Free.
 ========================================================================
 
-STEP 1 — Google Cloud project
-1. Go to console.cloud.google.com  (sign in with your Workspace account).
-2. Top bar -> project dropdown -> New Project -> name it "Oakline" -> Create.
+You already have the Google Cloud project with Sheets API + Drive API ON.
+Now we get a one-time "refresh token" so the tool can act as you.
 
-STEP 2 — Enable the APIs
-1. Search bar -> "Google Sheets API" -> Enable.
-2. Search bar -> "Google Drive API"  -> Enable.
+STEP 1 — OAuth consent screen
+1. console.cloud.google.com -> APIs & Services -> OAuth consent screen.
+2. User type: External -> Create.
+3. App name: Oakline. User support email: your email. Developer email: your email. Save & continue.
+4. Scopes: skip (Save & continue).
+5. Test users: ADD your own Gmail (the one whose Drive will hold the sheets). Save.
+6. Back on the OAuth screen, click "PUBLISH APP" -> Confirm.
+   (Publishing keeps the token from expiring. drive.file is a low scope, so no
+    Google review is needed; you may see an "unverified app" notice for your own
+    account, which is fine to continue past.)
 
-STEP 3 — Create a service account (the robot that makes the sheets)
-1. Menu -> APIs & Services -> Credentials.
-2. Create Credentials -> Service account -> name "oakline-sheets" -> Done.
-3. Click the new service account -> Keys tab -> Add key -> Create new key
-   -> JSON -> Create. A .json file downloads. KEEP IT SAFE.
+STEP 2 — Create an OAuth Client ID
+1. APIs & Services -> Credentials -> + Create Credentials -> OAuth client ID.
+2. Application type: Web application. Name: Oakline Web.
+3. Under "Authorized redirect URIs" -> Add URI:
+       https://developers.google.com/oauthplayground
+4. Create. A popup shows your Client ID and Client secret -> copy BOTH to Notepad.
 
-STEP 4 — Make a Shared Drive and add the robot
-1. In Google Drive (drive.google.com) -> Shared drives -> New -> "Oakline Clients".
-2. Open it -> Manage members -> add the service account email
-   (it looks like oakline-sheets@oakline-xxxxx.iam.gserviceaccount.com)
-   -> give it "Content manager" -> Send.
-3. Open the Shared Drive; the ID is in the URL after /drive/folders/  -> copy it.
+STEP 3 — Get the refresh token (OAuth Playground)
+1. Go to  developers.google.com/oauthplayground
+2. Top-right GEAR icon -> tick "Use your own OAuth credentials"
+   -> paste your Client ID and Client secret -> close.
+3. On the LEFT, find the box "Input your own scopes" and paste exactly:
+       https://www.googleapis.com/auth/drive.file
+   -> click "Authorize APIs".
+4. Sign in with YOUR Gmail (the sheets owner). If it warns "unverified",
+   click Advanced -> "Go to Oakline (unsafe)" -> Allow.
+5. Back in the Playground, click "Exchange authorization code for tokens".
+6. Copy the "Refresh token" value -> Notepad.
 
-STEP 5 — Put them in Vercel
-1. Vercel -> your project -> Settings -> Environment Variables.
-2. Add:
-     GOOGLE_SERVICE_ACCOUNT_JSON = (open the downloaded .json, copy ALL of
-        its contents, paste as the value — it's fine as one big blob)
-     GOOGLE_SHARED_DRIVE_ID      = (the ID you copied in Step 4)
-3. Save -> Deployments -> Redeploy (so it picks up the new variables).
+STEP 4 — Put the 3 values in Vercel
+1. Vercel -> your project -> Settings -> Environment Variables. Add:
+       GOOGLE_OAUTH_CLIENT_ID       = (Client ID)
+       GOOGLE_OAUTH_CLIENT_SECRET   = (Client secret)
+       GOOGLE_OAUTH_REFRESH_TOKEN   = (the refresh token)
+2. Save -> Deployments -> Redeploy.
 
-DONE. Now in the tool, after a hunt, click "Save to Google Sheet":
-- It creates an editable Google Sheet in your Shared Drive,
-- shares it (editable) with the signed-in client's email,
-- and opens the link. Each save = that client's own sheet.
+DONE. In the tool, after a hunt, click "Save to Google Sheet":
+- It creates the sheet in YOUR Drive, shares it editable with the signed-in
+  client's email, and opens the link.
 
-If "Save to Google Sheet" shows an error, it usually means one of the env
-values is missing/incorrect, or the service account wasn't added to the
-Shared Drive. Re-check Steps 4 and 5.
+If "Save to Google Sheet" errors, re-check the 3 values and that you clicked
+"Exchange authorization code for tokens" (not just Authorize).
