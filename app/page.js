@@ -210,6 +210,23 @@ function Hunt(){
   </>);
 }
 
+function downloadSheet(data){
+  const headers=['Product','Why now','Audience','Demand','Competition','Score/10','Facebook Ads (active)','TikTok Shop','AliExpress','Amazon','Image search'];
+  const linkOf=(p,name)=>{const f=(p.links||[]).find(x=>x.name===name);return f?f.url:'';};
+  const rows=(data.products||[]).map(p=>[
+    p.name,p.whyNow,p.audience,p.demandScore,p.competitionScore,p.finalScore,
+    linkOf(p,'Facebook Ads Library'),linkOf(p,'TikTok Shop'),linkOf(p,'AliExpress'),linkOf(p,'Amazon'),
+    'https://www.google.com/search?tbm=isch&q='+encodeURIComponent(p.name)
+  ]);
+  const esc=(v)=>{const x=String(v==null?'':v);return '"'+x.replace(/"/g,'""')+'"';};
+  const csv=[headers,...rows].map(r=>r.map(esc).join(',')).join('\r\n');
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='oakline-products-'+String(data.niche||'hunt').replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.csv';
+  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+
 function Results({data}){
   const sCls=(s)=>s>=7.5?'s-hi':s>=6?'s-mid':'s-lo';
   return(<div style={{marginTop:18}}>
@@ -227,8 +244,8 @@ function Results({data}){
         {(!data.risingQueries||data.risingQueries.length===0)&&<span className="hint">No rising queries returned.</span>}</div>
       </section>
     </div>
-    <section className="card"><h2>🛍️ Product ideas ({data.products?.length||0})</h2>
-      <p className="hint">AI-generated from the niche + live trends. Click a platform to research it in your browser.</p>
+    <section className="card"><div className="row" style={{justifyContent:'space-between',alignItems:'center'}}><h2 style={{margin:0}}>🛍️ Product ideas ({data.products?.length||0})</h2>{(data.products&&data.products.length>0)&&<button className="btn sm" onClick={()=>downloadSheet(data)}>⬇ Download sheet</button>}</div>
+      <p className="hint">AI-generated from the niche + live trends. Click a platform to research it, or download the sheet for Google Sheets / Excel.</p>
       <table><thead><tr><th>Product</th><th>Why now</th><th>Demand</th><th>Comp.</th><th>Score</th><th>Research on</th></tr></thead><tbody>
         {(data.products||[]).map((p,i)=>(<tr key={i}>
           <td><b>{p.name}</b><div className="hint">{p.audience}</div></td>
