@@ -229,6 +229,10 @@ function downloadSheet(data){
 
 function Results({data}){
   const sCls=(s)=>s>=7.5?'s-hi':s>=6?'s-mid':'s-lo';
+  const [gsBusy,setGsBusy]=useState(false);const[gsErr,setGsErr]=useState(null);const[gsUrl,setGsUrl]=useState(null);
+  async function makeSheet(){setGsErr(null);setGsBusy(true);setGsUrl(null);
+    try{const r=await api('/api/export-sheet',{method:'POST',body:{niche:data.niche,country:data.country,products:data.products}});setGsUrl(r.url);window.open(r.url,'_blank');}
+    catch(e){setGsErr(e.message);}finally{setGsBusy(false);}}
   return(<div style={{marginTop:18}}>
     <section className="card"><h2>Results — {data.niche} · {data.country}</h2>
       <p className="hint">Live Google Trends + AI product ideas. Trend data is real and updates over time.</p>
@@ -244,8 +248,10 @@ function Results({data}){
         {(!data.risingQueries||data.risingQueries.length===0)&&<span className="hint">No rising queries returned.</span>}</div>
       </section>
     </div>
-    <section className="card"><div className="row" style={{justifyContent:'space-between',alignItems:'center'}}><h2 style={{margin:0}}>🛍️ Product ideas ({data.products?.length||0})</h2>{(data.products&&data.products.length>0)&&<button className="btn sm" onClick={()=>downloadSheet(data)}>⬇ Download sheet</button>}</div>
+    <section className="card"><div className="row" style={{justifyContent:'space-between',alignItems:'center'}}><h2 style={{margin:0}}>🛍️ Product ideas ({data.products?.length||0})</h2>{(data.products&&data.products.length>0)&&<div className="row" style={{gap:8}}><button className="btn sm" onClick={()=>downloadSheet(data)}>⬇ Download sheet</button><button className="btn sm" onClick={makeSheet} disabled={gsBusy}>{gsBusy?'Creating…':'Save to Google Sheet'}</button></div>}</div>
       <p className="hint">AI-generated from the niche + live trends. Click a platform to research it, or download the sheet for Google Sheets / Excel.</p>
+      {gsErr&&<p className="hint" style={{color:'#e88'}}>{gsErr}</p>}
+      {gsUrl&&<p className="hint">Google Sheet created: <a className="tag" href={gsUrl} target="_blank" rel="noreferrer">Open it ↗</a></p>}
       <table><thead><tr><th>Product</th><th>Why now</th><th>Demand</th><th>Comp.</th><th>Score</th><th>Research on</th></tr></thead><tbody>
         {(data.products||[]).map((p,i)=>(<tr key={i}>
           <td><b>{p.name}</b><div className="hint">{p.audience}</div></td>

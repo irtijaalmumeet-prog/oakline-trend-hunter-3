@@ -1,0 +1,42 @@
+========================================================================
+  CONNECT GOOGLE SHEETS  (auto-create an editable sheet per client)
+  For a Google WORKSPACE (business) account. ~15 minutes, one time.
+========================================================================
+
+STEP 1 — Google Cloud project
+1. Go to console.cloud.google.com  (sign in with your Workspace account).
+2. Top bar -> project dropdown -> New Project -> name it "Oakline" -> Create.
+
+STEP 2 — Enable the APIs
+1. Search bar -> "Google Sheets API" -> Enable.
+2. Search bar -> "Google Drive API"  -> Enable.
+
+STEP 3 — Create a service account (the robot that makes the sheets)
+1. Menu -> APIs & Services -> Credentials.
+2. Create Credentials -> Service account -> name "oakline-sheets" -> Done.
+3. Click the new service account -> Keys tab -> Add key -> Create new key
+   -> JSON -> Create. A .json file downloads. KEEP IT SAFE.
+
+STEP 4 — Make a Shared Drive and add the robot
+1. In Google Drive (drive.google.com) -> Shared drives -> New -> "Oakline Clients".
+2. Open it -> Manage members -> add the service account email
+   (it looks like oakline-sheets@oakline-xxxxx.iam.gserviceaccount.com)
+   -> give it "Content manager" -> Send.
+3. Open the Shared Drive; the ID is in the URL after /drive/folders/  -> copy it.
+
+STEP 5 — Put them in Vercel
+1. Vercel -> your project -> Settings -> Environment Variables.
+2. Add:
+     GOOGLE_SERVICE_ACCOUNT_JSON = (open the downloaded .json, copy ALL of
+        its contents, paste as the value — it's fine as one big blob)
+     GOOGLE_SHARED_DRIVE_ID      = (the ID you copied in Step 4)
+3. Save -> Deployments -> Redeploy (so it picks up the new variables).
+
+DONE. Now in the tool, after a hunt, click "Save to Google Sheet":
+- It creates an editable Google Sheet in your Shared Drive,
+- shares it (editable) with the signed-in client's email,
+- and opens the link. Each save = that client's own sheet.
+
+If "Save to Google Sheet" shows an error, it usually means one of the env
+values is missing/incorrect, or the service account wasn't added to the
+Shared Drive. Re-check Steps 4 and 5.
