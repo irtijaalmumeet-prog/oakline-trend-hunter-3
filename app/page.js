@@ -155,6 +155,34 @@ function shortDevice(ua){ if(!ua)return 'Unknown device';
   const br=/Edg/.test(ua)?'Edge':/Chrome/.test(ua)?'Chrome':/Firefox/.test(ua)?'Firefox':/Safari/.test(ua)?'Safari':'Browser';
   return br+' on '+os; }
 
+function NicheFinder({country,onPick}){
+  const[budget,setBudget]=useState('');const[busy,setBusy]=useState(false);const[err,setErr]=useState(null);const[res,setRes]=useState(null);
+  async function find(){setErr(null);setBusy(true);setRes(null);
+    try{setRes(await api('/api/niche-advisor',{method:'POST',body:{country,budget:Number(budget)||0}}));}
+    catch(e){setErr(e.message);}finally{setBusy(false);}}
+  return(<section className="card nichefinder">
+    <h2>🧭 Find your niche (AI)</h2>
+    <p className="hint">New to this? Enter your budget and we&apos;ll suggest the best niches for your country &amp; budget.</p>
+    <div className="row">
+      <input type="text" inputMode="numeric" placeholder="Your budget in $ (e.g. 80)" value={budget} onChange={e=>setBudget(e.target.value.replace(/[^0-9]/g,''))}/>
+      <button className="btn" disabled={busy||!budget} onClick={find}>{busy?<><span className="spinner"/> Thinking…</>:'Find my niche'}</button>
+    </div>
+    {err&&<p style={{color:'#e88'}}>{err}</p>}
+    {res&&<div style={{marginTop:14}}>
+      {res.summary&&<p className="hint" style={{color:'#d8c45a'}}>{res.summary}</p>}
+      <div className="grid2">
+        {(res.niches||[]).map((n,i)=>(<div className="card" key={i} style={{margin:0}}>
+          <h2 style={{fontSize:15}}>{n.niche} {n.fit?<span className="tag">{n.fit}/100 fit</span>:null}</h2>
+          <p className="hint">{n.why}</p>
+          {n.productType&&<p className="hint"><b>Try:</b> {n.productType}</p>}
+          {n.budgetTip&&<p className="hint"><b>Budget tip:</b> {n.budgetTip}</p>}
+          <button className="btn ghost sm" onClick={()=>onPick(n.niche)}>Use this niche</button>
+        </div>))}
+      </div>
+    </div>}
+  </section>);
+}
+
 function Hunt(){
   const[country,setCountry]=useState('US');const[niche,setNiche]=useState('');const[ai,setAi]=useState(false);
   const[busy,setBusy]=useState(false);const[err,setErr]=useState(null);const[data,setData]=useState(null);
@@ -163,6 +191,7 @@ function Hunt(){
     catch(e){setErr(e.message);}finally{setBusy(false);}}
   const can=country&&(ai||niche.trim());
   return(<>
+    <NicheFinder country={country} onPick={(n)=>{setNiche(n);setAi(false);}}/>
     <section className="card"><h2>Step 1 — Country</h2><p className="hint">Choose your target market.</p>
       <select className="select" value={country} onChange={e=>setCountry(e.target.value)}>
         {COUNTRIES.map(([c,l])=>(<option key={c} value={c}>{l}</option>))}

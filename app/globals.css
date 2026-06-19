@@ -169,3 +169,7 @@ tbody tr{transition:background .2s}tbody tr:hover{background:rgba(201,168,76,0.0
 .wabtn{display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#06301a;font-weight:700;font-size:13px;letter-spacing:.02em;padding:11px 18px;border-radius:3px;text-decoration:none;transition:background .2s,transform .2s}
 .wabtn:hover{background:#1fba58;transform:translateY(-1px)}
 .wabtn svg{width:16px;height:16px}
+
+/* ===== AI niche finder box ===== */
+.nichefinder{border:1px solid rgba(201,168,76,.45);box-shadow:0 0 0 1px rgba(201,168,76,.08)}
+.nichefinder h2{color:var(--gold-light)}
