@@ -7,6 +7,7 @@ import { platformLinks } from '../../../lib/platformLinks.js';
 import { searchVideos, youtubeEnabled } from '../../../lib/youtube.js';
 
 export const runtime = 'nodejs';
+export const maxDuration = 60;
 
 export async function POST(req) {
   const u = userFromReq(req);
@@ -40,7 +41,9 @@ export async function POST(req) {
     ].filter(Boolean);
 
     // 3) Claude turns the niche + live trends into scored product ideas
-    const ideasRaw = await productIdeas({ niche, country, trendTerms });
+    let ideasRaw = [];
+    try { ideasRaw = await productIdeas({ niche, country, trendTerms }); }
+    catch (e) { warnings.push('AI error: ' + (e && e.message ? e.message : 'unknown')); }
     const MIN_SCORE = 8;     // prefer products scoring 8/10 or higher
     const MAX_PRODUCTS = 15; // cap how many to show
     const scored = scoreIdeas(ideasRaw);
@@ -49,7 +52,7 @@ export async function POST(req) {
       chosen = scored.slice(0, MAX_PRODUCTS);
       if (chosen.length) warnings.push('No products reached 8/10 this run — showing the strongest available.');
     }
-    if (scored.length === 0) warnings.push('The AI returned no product ideas — try a different niche or run again.');
+    if (scored.length === 0) warnings.push('AI returned 0 ideas (' + (ideasRaw ? ideasRaw.length : 0) + ' raw). Check Claude API key/credits in Vercel, or try again.');
     const products = chosen.map((p) => ({ ...p, links: platformLinks(p.name, country) }));
 
     // 4) optional YouTube demand signal for the niche
