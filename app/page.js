@@ -231,7 +231,7 @@ function Results({data}){
   const sCls=(s)=>s>=7.5?'s-hi':s>=6?'s-mid':'s-lo';
   const [gsBusy,setGsBusy]=useState(false);const[gsErr,setGsErr]=useState(null);const[gsUrl,setGsUrl]=useState(null);const[gsWarn,setGsWarn]=useState(null);
   async function makeSheet(){setGsErr(null);setGsBusy(true);setGsUrl(null);
-    try{const r=await api('/api/export-sheet',{method:'POST',body:{niche:data.niche,country:data.country,products:data.products}});setGsUrl(r.url);setGsWarn(r.linkOpen?null:('Could not make it open-to-anyone: '+(r.linkErr||'unknown')));window.open(r.url,'_blank');}
+    try{const r=await api('/api/export-sheet',{method:'POST',body:{niche:data.niche,country:data.country,products:data.products}});setGsUrl(r.url);if(r.linkOpen){setGsWarn(null);window.open(r.url,'_blank');}else{setGsWarn('Sheet created but NOT open-to-anyone. Reason: '+(r.linkErr||'unknown'));alert('Sheet created, but Google would not make it open-to-anyone.\n\nReason:\n'+(r.linkErr||'unknown'));}}
     catch(e){setGsErr(e.message);}finally{setGsBusy(false);}}
   return(<div style={{marginTop:18}}>
     <section className="card"><h2>Results — {data.niche} · {data.country}</h2>
