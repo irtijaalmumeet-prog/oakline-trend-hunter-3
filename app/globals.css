@@ -84,7 +84,8 @@ tbody tr{transition:background .2s}tbody tr:hover{background:rgba(201,168,76,0.0
 @keyframes spin{to{transform:rotate(360deg)}}
 
 @media (prefers-reduced-motion: reduce){
-  *{animation:none!important;transition:none!important}
+  *{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.01ms!important}
+  .authfield,.card,.brandbar,.pill,.signinBtn .bh,.splashEmb{opacity:1!important;transform:none!important}
 }
 
 /* country dropdown */

@@ -26,7 +26,8 @@ function ContactWA({label}){return(<a className="wabtn" href={WA_LINK} target="_
 export default function Home(){
   const [user,setUser]=useState(null); const [booting,setBooting]=useState(true); const [gate,setGate]=useState(false);
   useEffect(()=>{(async()=>{try{if(token())setUser(await api('/api/me'));}catch{setTok(null);}setBooting(false);})();},[]);
-  if(!gate) return <Splash onEnter={()=>setGate(true)}/>;
+  useEffect(()=>{ try{ if(sessionStorage.getItem('oth_entered')==='1') setGate(true); }catch{} },[]);
+  if(!gate) return <Splash onEnter={()=>{ try{sessionStorage.setItem('oth_entered','1');}catch{} setGate(true); }}/>;
   if(booting) return <main className="wrap"><Brand/></main>;
   if(!user) return <Login onLogin={setUser}/>;
   return <Dashboard user={user} onLogout={()=>{setTok(null);setUser(null);}}/>;
