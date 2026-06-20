@@ -157,15 +157,15 @@ function shortDevice(ua){ if(!ua)return 'Unknown device';
   return br+' on '+os; }
 
 function NicheFinder({country,onPick}){
-  const[budget,setBudget]=useState('');const[busy,setBusy]=useState(false);const[err,setErr]=useState(null);const[res,setRes]=useState(null);
+  const[budget,setBudget]=useState('');const[nfCountry,setNfCountry]=useState(country||'US');const[busy,setBusy]=useState(false);const[err,setErr]=useState(null);const[res,setRes]=useState(null);
   async function find(){setErr(null);setBusy(true);setRes(null);
-    try{setRes(await api('/api/niche-advisor',{method:'POST',body:{country,budget:Number(budget)||0}}));}
+    try{setRes(await api('/api/niche-advisor',{method:'POST',body:{country:nfCountry||'Worldwide',budget:Number(budget)||0}}));}
     catch(e){setErr(e.message);}finally{setBusy(false);}}
   return(<section className="card nichefinder">
     <h2>🧭 Find your niche (AI)</h2>
     <p className="hint">New to this? Enter your budget and we&apos;ll suggest the best niches for your country &amp; budget.</p>
     <div className="row">
-      <input type="text" inputMode="numeric" placeholder="Your budget in $ (e.g. 80)" value={budget} onChange={e=>setBudget(e.target.value.replace(/[^0-9]/g,''))}/>
+      <input type="text" inputMode="numeric" placeholder="Your budget in $ (e.g. 80)" value={budget} onChange={e=>setBudget(e.target.value.replace(/[^0-9]/g,''))}/><select className="select" value={nfCountry} onChange={e=>setNfCountry(e.target.value)} style={{maxWidth:210}}><option value="Worldwide">Any country (optional)</option>{COUNTRIES.map(([c,l])=>(<option key={c} value={c}>{l}</option>))}</select>
       <button className="btn" disabled={busy||!budget} onClick={find}>{busy?<><span className="spinner"/> Thinking…</>:'Find my niche'}</button>
     </div>
     {err&&<p style={{color:'#e88'}}>{err}</p>}
