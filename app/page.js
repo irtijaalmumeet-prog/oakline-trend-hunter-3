@@ -229,9 +229,9 @@ function downloadSheet(data){
 
 function Results({data}){
   const sCls=(s)=>s>=7.5?'s-hi':s>=6?'s-mid':'s-lo';
-  const [gsBusy,setGsBusy]=useState(false);const[gsErr,setGsErr]=useState(null);const[gsUrl,setGsUrl]=useState(null);
+  const [gsBusy,setGsBusy]=useState(false);const[gsErr,setGsErr]=useState(null);const[gsUrl,setGsUrl]=useState(null);const[gsWarn,setGsWarn]=useState(null);
   async function makeSheet(){setGsErr(null);setGsBusy(true);setGsUrl(null);
-    try{const r=await api('/api/export-sheet',{method:'POST',body:{niche:data.niche,country:data.country,products:data.products}});setGsUrl(r.url);window.open(r.url,'_blank');}
+    try{const r=await api('/api/export-sheet',{method:'POST',body:{niche:data.niche,country:data.country,products:data.products}});setGsUrl(r.url);setGsWarn(r.linkOpen?null:('Could not make it open-to-anyone: '+(r.linkErr||'unknown')));window.open(r.url,'_blank');}
     catch(e){setGsErr(e.message);}finally{setGsBusy(false);}}
   return(<div style={{marginTop:18}}>
     <section className="card"><h2>Results — {data.niche} · {data.country}</h2>
@@ -252,6 +252,7 @@ function Results({data}){
       <p className="hint">AI-generated from the niche + live trends. Click a platform to research it, or download the sheet for Google Sheets / Excel.</p>
       {gsErr&&<p className="hint" style={{color:'#e88'}}>{gsErr}</p>}
       {gsUrl&&<p className="hint">Google Sheet created: <a className="tag" href={gsUrl} target="_blank" rel="noreferrer">Open it ↗</a></p>}
+      {gsWarn&&<p className="hint" style={{color:'#d8c45a'}}>{gsWarn}</p>}
       <table><thead><tr><th>Product</th><th>Why now</th><th>Demand</th><th>Comp.</th><th>Score</th><th>Research on</th></tr></thead><tbody>
         {(data.products||[]).map((p,i)=>(<tr key={i}>
           <td><b>{p.name}</b><div className="hint">{p.audience}</div></td>
